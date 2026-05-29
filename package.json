@@ -1,0 +1,25 @@
+{
+  "name": "kaplay-flexbox",
+  "version": "1.0.0",
+  "description": "a wrapper around Yoga that provides real css flexbox in kaplay.",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@types/yoga-layout": "^1.9.7",
+    "prettier": "3.8.3",
+    "vite": "^8.0.14",
+    "vite-plugin-dts": "^5.0.1"
+  },
+  "peerDependencies": {
+    "kaplay": "^3001.0.19"
+  },
+  "dependencies": {
+    "yoga-layout": "^3.2.1"
+  }
+}

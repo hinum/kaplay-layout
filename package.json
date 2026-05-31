@@ -7,7 +7,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "vite build",
+    "dev": "vite dev",
+    "format": "prettier . --write"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",
@@ -20,6 +22,9 @@
     "kaplay": "^3001.0.19"
   },
   "dependencies": {
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
+    "vite-express": "^0.22.1",
     "yoga-layout": "^3.2.1"
   }
 }

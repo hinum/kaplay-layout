@@ -1,16 +1,28 @@
-import Yoga, { MeasureFunction, Node } from "yoga-layout";
+import Yoga, { Edge, Gutter, Node, MeasureFunction as YogaMesaureFn } from "yoga-layout";
 
 // TODO: align baseline? overflow
+// component inspect properties
+// flex order?
 
-type ReactiveProps = {
+export type FlexboxStyle = {
   flex: number | undefined
   flexBasis: Length | "auto" | undefined
   flexGrow: number | undefined
   flexShrink: number | undefined
   alignSelf: FlexAlign | undefined
 
-  layoutWidth: Length | "auto" | undefined
-  layoutHeight: Length | "auto" | undefined
+  /** 
+   * the content box CSS width,
+   * this is not the object real width.
+   * use {@link getComputedLayout} or {@link width} instead.
+  */
+  boxWidth: Length | "auto" | undefined
+  /** 
+   * the content box CSS height,
+   * this is not the object real height.
+   * use {@link getComputedLayout} or {@link width} instead.
+  */
+  boxHeight: Length | "auto" | undefined
   maxHeight: Length | undefined
   maxWidth: Length | undefined
   minHeight: Length | undefined
@@ -21,14 +33,6 @@ type ReactiveProps = {
   top: Length | undefined
   bottom: Length | undefined
 
-  // border: number
-  // borderLeft: number
-  // borderRight: number
-  // borderTop: number
-  // borderBottom: number
-  // overflow: Overflow
-  // contentBox: Content
-  
   alignContent: FlexAlign | undefined
   alignItems: FlexAlign | undefined
   aspectRatio: number | undefined
@@ -36,32 +40,90 @@ type ReactiveProps = {
   flexWrap: FlexWrap | undefined
   justifyContent: FlexJustify | undefined
 
+  /** set the margin on all sides. */
   margin: Length | "auto" | undefined
   marginLeft: Length | "auto" | undefined
   marginRight: Length | "auto" | undefined
   marginTop: Length | "auto" | undefined
   marginBottom: Length | "auto" | undefined
+  /** set the margin on the horizontal sides. */
   marginX: Length | "auto" | undefined
+  /** set the margin on the vertical sides. */
   marginY: Length | "auto" | undefined
 
+  /** set the padding on all sides. */
   padding: Length | undefined
   padLeft: Length | undefined
   padRight: Length | undefined
   padTop: Length | undefined
   padBottom: Length | undefined
+  /** set the padding on the horizontal sides. */
   padX: Length | undefined
+  /** set the padding on the vertical sides. */
   padY: Length | undefined
+
+  gap: Length | undefined
+  /** gap between columns */
+  gapX: Length | undefined
+  /** gap between rows */
+  gapY: Length | undefined
 
   position: Position | undefined
   display: Display | undefined
 }
-export type LayoutOption = {
-  [K in keyof ReactiveProps]?: ReactiveProps[K]
+
+/**
+ * "fit-content" ~ at most as big as the containing box
+ * "stretch"     ~ exactly as big as the containing box
+ * "max-content" ~ as big as possible
+*/
+export type MeasureMode =
+  | "fit-content"
+  | "max-content"
+  | "stretch"
+
+/**
+ * @param  width width of the containing box
+ * @param  height height of the containing box
+ * @param  widthMode
+ * @param  heightMode
+ * @returns  size of the content box
+ * @see {@link MeasureMode}
+*/
+export type MeasureFunction = (
+  width: number,
+  height: number,
+  widthMode: MeasureMode,
+  heightMode: MeasureMode
+) => {
+  width: number
+  height: number
 }
+function fromMeasureMode(mode: number): MeasureMode {
+  switch (mode) {
+    case Yoga.MEASURE_MODE_UNDEFINED: return "max-content"
+    case Yoga.MEASURE_MODE_AT_MOST: return "fit-content"
+    case Yoga.MEASURE_MODE_EXACTLY: return "stretch"
+  }
+  throw `unregonized measure mode from Yoga: ${mode}`
+}
+export function toYogaMesaureFn(fn: MeasureFunction): YogaMesaureFn {
+  return (width, widthMode, height, heightMode) => {
+    return fn(width, height, fromMeasureMode(widthMode), fromMeasureMode(heightMode))
+  }
+}
+
 export type Length = number | undefined | `${number}%`
 export type Display = 
   | "none"
   | "flex"
+function toYogaDisplay(value: Display | undefined) {
+  switch (value) {
+    case "none": return Yoga.DISPLAY_NONE
+    case "flex": 
+    case undefined: return Yoga.DISPLAY_FLEX
+  }
+}
 export type FlexJustify =
   | "center"
   | "end"
@@ -69,6 +131,7 @@ export type FlexJustify =
   | "space-around"
   | "space-between"
   | "space-evenly"
+
 function toYogaJustify(value: FlexJustify | undefined): number {
   switch (value) {
     case "center": return Yoga.JUSTIFY_CENTER
@@ -77,8 +140,8 @@ function toYogaJustify(value: FlexJustify | undefined): number {
     case "space-around": return Yoga.JUSTIFY_SPACE_AROUND
     case "space-between": return Yoga.JUSTIFY_SPACE_BETWEEN
     case "space-evenly": return Yoga.JUSTIFY_SPACE_EVENLY
+    case undefined: return Yoga.JUSTIFY_FLEX_START
   }
-  return Yoga.JUSTIFY_FLEX_START
 }
 export type FlexAlign = 
   | "auto"
@@ -97,8 +160,8 @@ function toYogaAlign(value: FlexAlign | undefined): number {
     case "space-around": return Yoga.ALIGN_SPACE_AROUND
     case "space-between": return Yoga.ALIGN_SPACE_BETWEEN
     case "stretch": return Yoga.ALIGN_STRETCH
+    case undefined: return Yoga.ALIGN_FLEX_START
   }
-  return Yoga.ALIGN_FLEX_START
 }
 export type FlexDirection = 
   | "column"
@@ -111,8 +174,8 @@ function toYogaFlexDirection(value: FlexDirection | undefined): number {
     case "column-reverse": return Yoga.FLEX_DIRECTION_COLUMN_REVERSE
     case "row": return Yoga.FLEX_DIRECTION_ROW
     case "row-reverse": return Yoga.FLEX_DIRECTION_ROW_REVERSE
+    case undefined: return Yoga.FLEX_DIRECTION_COLUMN
   }
-  return Yoga.FLEX_DIRECTION_COLUMN
 }
 export type FlexWrap =
   | "wrap"
@@ -123,8 +186,8 @@ function toYogaFlexWrap(value: FlexWrap | undefined): number {
     case "wrap": return Yoga.WRAP_WRAP
     case "wrap-reverse": return Yoga.WRAP_WRAP_REVERSE
     case "no-wrap": return Yoga.WRAP_NO_WRAP
+    case undefined: return Yoga.WRAP_NO_WRAP
   }
-  return Yoga.WRAP_NO_WRAP
 }
 type Position =
   | "absolute"
@@ -135,317 +198,59 @@ function toYogaPosition(value: Position | undefined): number {
     case "absolute": return Yoga.POSITION_TYPE_ABSOLUTE
     case "relative": return Yoga.POSITION_TYPE_RELATIVE
     case "static": return Yoga.POSITION_TYPE_STATIC
+    case undefined: return Yoga.POSITION_TYPE_RELATIVE
   }
-  return Yoga.POSITION_TYPE_RELATIVE
 }
 
-export class ReactiveComp implements ReactiveProps {
-  protected yogaNode: Node
-  protected layoutStyle = {} as ReactiveProps
+export type NodeStyleStter = {
+  [K in keyof FlexboxStyle]: (arg: FlexboxStyle[K]) => void
+}
+export function createNodeSetter(node: Node): NodeStyleStter {
+  return {
+    alignContent: a => node.setAlignContent(toYogaAlign(a)),
+    alignItems: a => node.setAlignItems(toYogaAlign(a)),
+    alignSelf: a => node.setAlignSelf(toYogaAlign(a)),
+    display: a => node.setDisplay(toYogaDisplay(a)),
+    flexWrap: a => node.setFlexShrink(toYogaFlexWrap(a)),
+    flexDirection: a => node.setFlexDirection(toYogaFlexDirection(a)),
+    justifyContent: a => node.setJustifyContent(toYogaJustify(a)),
 
-  constructor(
-    opts: LayoutOption,
-    mesuare?: MeasureFunction,
-  ) {
-    this.yogaNode = Yoga.Node.create()
-    if (opts.alignContent) this.alignContent = opts.alignContent
-    if (opts.alignItems) this.alignItems = opts.alignItems
-    if (opts.alignSelf) this.alignSelf = opts.alignSelf
-    if (opts.aspectRatio) this.aspectRatio = opts.aspectRatio
-    if (opts.display) this.display = opts.display
-    if (opts.flex) this.flex = opts.flex
-    if (opts.flexBasis) this.flexBasis = opts.flexBasis
-    if (opts.flexDirection) this.flexDirection = opts.flexDirection
-    if (opts.flexGrow) this.flexGrow = opts.flexGrow
-    if (opts.flexShrink) this.flexShrink = opts.flexShrink
-    if (opts.flexWrap) this.flexWrap = opts.flexWrap
-    if (opts.layoutHeight) this.layoutHeight = opts.layoutHeight
-    if (opts.layoutWidth) this.layoutWidth = opts.layoutWidth
-    if (opts.justifyContent) this.justifyContent = opts.justifyContent
-    if (opts.margin) this.margin = opts.margin
-    if (opts.marginX) this.marginX = opts.marginX
-    if (opts.marginY) this.marginY = opts.marginY
-    if (opts.marginLeft) this.marginLeft = opts.marginLeft
-    if (opts.marginRight) this.marginRight = opts.marginRight
-    if (opts.marginTop) this.marginTop = opts.marginTop
-    if (opts.marginBottom) this.marginBottom = opts.marginBottom
-    if (opts.padding) this.padding = opts.padding
-    if (opts.padX) this.padX = opts.padX
-    if (opts.padY) this.padY = opts.padY
-    if (opts.padLeft) this.padLeft = opts.padLeft
-    if (opts.padRight) this.padRight = opts.padRight
-    if (opts.padTop) this.padTop = opts.padTop
-    if (opts.padBottom) this.padBottom = opts.padBottom
-    if (opts.maxHeight) this.maxHeight = opts.maxHeight
-    if (opts.maxWidth) this.maxWidth = opts.maxWidth
-    if (opts.minHeight) this.minHeight = opts.minHeight
-    if (opts.minWidth) this.minWidth = opts.minWidth
-    if (opts.left) this.left = opts.left
-    if (opts.right) this.right = opts.right
-    if (opts.top) this.top = opts.top
-    if (opts.bottom) this.bottom = opts.bottom
+    margin: a => node.setMargin(Edge.All, a),
+    marginX: a => node.setMargin(Edge.Horizontal, a),
+    marginY: a => node.setMargin(Edge.Vertical, a),
+    marginLeft: a => node.setMargin(Edge.Left, a),
+    marginRight: a => node.setMargin(Edge.Right, a),
+    marginTop: a => node.setMargin(Edge.Top, a),
+    marginBottom: a => node.setMargin(Edge.Bottom, a),
 
-    if (mesuare) this.yogaNode.setMeasureFunc(mesuare)
-  }
-  get display() {
-    return this.layoutStyle.display
-  }
-  set display(a) {
-    this.layoutStyle.display = a
-    if (this.display == "flex") {
-      this.yogaNode.setDisplay(Yoga.DISPLAY_FLEX)
-    } else {
-      this.yogaNode.setDisplay(Yoga.DISPLAY_NONE)
-    }
-  }
-  get aspectRatio() {
-    return this.layoutStyle.aspectRatio
-  }
-  set aspectRatio(a) {
-    this.layoutStyle.aspectRatio = a
-    this.yogaNode.setAspectRatio(a)
-  }
-  get alignSelf() {
-    return this.layoutStyle.alignSelf
-  }
-  set alignSelf(a) {
-    this.layoutStyle.alignSelf = a
-    this.yogaNode.setAlignSelf(toYogaAlign(a))
-  }
-  get alignItems() {
-    return this.layoutStyle.alignItems
-  }
-  set alignItems(a) {
-    this.layoutStyle.alignItems = a
-    this.yogaNode.setAlignItems(toYogaAlign(a))
-  }
-  get alignContent() {
-    return this.layoutStyle.alignContent
-  }
-  set alignContent(a) {
-    this.layoutStyle.alignContent = a
-    this.yogaNode.setAlignContent(toYogaAlign(a))
-  }
-  get justifyContent() {
-    return this.layoutStyle.justifyContent
-  }
-  set justifyContent(a) {
-    this.layoutStyle.justifyContent = a
-    this.yogaNode.setJustifyContent(toYogaJustify(a))
-  }
-  get flex() {
-    return this.layoutStyle.flex
-  }
-  set flex(a) {
-    this.layoutStyle.flex = a
-    this.yogaNode.setFlex(a)
-  }
-  get flexGrow() {
-    return this.layoutStyle.flexGrow
-  }
-  set flexGrow(a) {
-    this.layoutStyle.flexGrow = a
-    this.yogaNode.setFlexGrow(a)
-  }
-  get flexShrink() {
-    return this.layoutStyle.flexShrink
-  }
-  set flexShrink(a) {
-    this.layoutStyle.flexShrink = a
-    this.yogaNode.setFlexShrink(a)
-  }
-  get flexDirection() {
-    return this.layoutStyle.flexDirection
-  }
-  set flexDirection(a) {
-    this.layoutStyle.flexDirection = a
-    this.yogaNode.setFlexDirection(toYogaFlexDirection(a))
-  }
-  get flexWrap() {
-    return this.layoutStyle.flexWrap
-  }
-  set flexWrap(a) {
-    this.layoutStyle.flexWrap = a
-    this.yogaNode.setFlexWrap(toYogaFlexWrap(a))
-  }
-  get flexBasis() {
-    return this.layoutStyle.flexBasis
-  }
-  set flexBasis(a) {
-    this.layoutStyle.flexBasis = a
-    this.yogaNode.setFlexBasis(a)
-  }
-  get position() {
-    return this.layoutStyle.position
-  }
-  set position(a) {
-    this.layoutStyle.position = a
-    this.yogaNode.setPositionType(toYogaPosition(a))
-  }
-  get layoutHeight() {
-    return this.layoutStyle.layoutHeight
-  }
-  set layoutHeight(a) {
-    this.layoutStyle.layoutHeight = a
-    this.yogaNode.setHeight(a)
-  }
-  get layoutWidth() {
-    return this.layoutStyle.layoutWidth
-  }
-  set layoutWidth(a) {
-    this.layoutStyle.layoutWidth = a
-    this.yogaNode.setWidth(a)
-  }
-  get maxWidth() {
-    return this.layoutStyle.maxWidth
-  }
-  set maxWidth(a) {
-    this.layoutStyle.maxWidth = a
-    this.yogaNode.setMaxWidth(a)
-  }
-  get maxHeight() {
-    return this.layoutStyle.maxHeight
-  }
-  set maxHeight(a) {
-    this.layoutStyle.maxHeight = a
-    this.yogaNode.setMaxHeight(a)
-  }
-  get minWidth() {
-    return this.layoutStyle.minWidth
-  }
-  set minWidth(a) {
-    this.layoutStyle.minWidth = a
-    this.yogaNode.setMaxWidth(a)
-  }
-  get minHeight() {
-    return this.layoutStyle.minHeight
-  }
-  set minHeight(a) {
-    this.layoutStyle.minHeight = a
-    this.yogaNode.setMaxHeight(a)
-  }
-  /** you cannot read this property */
-  set margin(a: Length | "auto") {
-    this.yogaNode.setMargin(Yoga.EDGE_ALL, a)
-    this.layoutStyle.marginLeft = a
-    this.layoutStyle.marginRight = a
-    this.layoutStyle.marginTop = a
-    this.layoutStyle.marginBottom = a
-  }
-  /** you cannot read this property */
-  set marginX(a: Length | "auto") {
-    this.yogaNode.setMargin(Yoga.EDGE_HORIZONTAL, a)
-    this.layoutStyle.marginLeft = a
-    this.layoutStyle.marginRight = a
-  }
-  /** you cannot read this property */
-  set marginY(a: Length | "auto") {
-    this.yogaNode.setMargin(Yoga.EDGE_VERTICAL, a)
-    this.layoutStyle.marginTop = a
-    this.layoutStyle.marginBottom = a
-  }
-  get marginLeft() {
-    return this.layoutStyle.marginLeft
-  }
-  set marginLeft(a) {
-    this.layoutStyle.marginLeft = a
-    this.yogaNode.setMargin(Yoga.EDGE_LEFT, a)
-  }
-  get marginRight() {
-    return this.layoutStyle.marginRight
-  }
-  set marginRight(a) {
-    this.layoutStyle.marginRight = a
-    this.yogaNode.setMargin(Yoga.EDGE_RIGHT, a)
-  }
-  get marginTop() {
-    return this.layoutStyle.marginTop
-  }
-  set marginTop(a) {
-    this.layoutStyle.marginTop = a
-    this.yogaNode.setMargin(Yoga.EDGE_TOP, a)
-  }
-  get marginBottom() {
-    return this.layoutStyle.marginBottom
-  }
-  set marginBottom(a) {
-    this.layoutStyle.marginBottom = a
-    this.yogaNode.setMargin(Yoga.EDGE_BOTTOM, a)
-  }
-  get left() {
-    return this.layoutStyle.left
-  }
-  set left(a) {
-    this.layoutStyle.left = a
-    this.yogaNode.setPosition(Yoga.EDGE_LEFT, a)
-  }
-  get right() {
-    return this.layoutStyle.right
-  }
-  set right(a) {
-    this.layoutStyle.right = a
-    this.yogaNode.setPosition(Yoga.EDGE_RIGHT, a)
-  }
-  get top() {
-    return this.layoutStyle.top
-  }
-  set top(a) {
-    this.layoutStyle.top = a
-    this.yogaNode.setPosition(Yoga.EDGE_TOP, a)
-  }
-  get bottom() {
-    return this.layoutStyle.bottom
-  }
-  set bottom(a) {
-    this.layoutStyle.bottom = a
-    this.yogaNode.setPosition(Yoga.EDGE_BOTTOM, a)
-  }
-  /** you cannot read this property */
-  set padding(a: Length) {
-    this.yogaNode.setPadding(Yoga.EDGE_ALL, a)
-    this.layoutStyle.padLeft = a
-    this.layoutStyle.padRight = a
-    this.layoutStyle.padTop = a
-    this.layoutStyle.padBottom = a
-  }
-  /** you cannot read this property */
-  set padX(a: Length) {
-    this.yogaNode.setPadding(Yoga.EDGE_HORIZONTAL, a)
-    this.layoutStyle.padLeft = a
-    this.layoutStyle.padRight = a
-  }
-  /** you cannot read this property */
-  set padY(a: Length) {
-    this.yogaNode.setPadding(Yoga.EDGE_VERTICAL, a)
-    this.layoutStyle.padTop = a
-    this.layoutStyle.padBottom = a
-  }
-  get padLeft() {
-    return this.layoutStyle.padLeft
-  }
-  set padLeft(a) {
-    this.layoutStyle.padLeft = a
-    this.yogaNode.setPadding(Yoga.EDGE_LEFT, a)
-  }
-  get padRight() {
-    return this.layoutStyle.padRight
-  }
-  set padRight(a) {
-    this.layoutStyle.padRight = a
-    this.yogaNode.setPadding(Yoga.EDGE_RIGHT, a)
-  }
-  get padTop() {
-    return this.layoutStyle.padTop
-  }
-  set padTop(a) {
-    this.layoutStyle.padTop = a
-    this.yogaNode.setPadding(Yoga.EDGE_TOP, a)
-  }
-  get padBottom() {
-    return this.layoutStyle.padBottom
-  }
-  set padBottom(a) {
-    this.layoutStyle.padBottom = a
-    this.yogaNode.setPadding(Yoga.EDGE_BOTTOM, a)
+    padding: a => node.setPadding(Edge.All, a),
+    padX: a => node.setPadding(Edge.Horizontal, a),
+    padY: a => node.setPadding(Edge.Vertical, a),
+    padLeft: a => node.setPadding(Edge.Left, a),
+    padRight: a => node.setPadding(Edge.Right, a),
+    padTop: a => node.setPadding(Edge.Top, a),
+    padBottom: a => node.setPadding(Edge.Bottom, a),
+
+    position: a => node.setPositionType(toYogaPosition(a)),
+    left: a => node.setPosition(Edge.Left, a),
+    right: a => node.setPosition(Edge.Right, a),
+    top: a => node.setPosition(Edge.Top, a),
+    bottom: a => node.setPosition(Edge.Bottom, a),
+
+    gap: a => node.setGap(Gutter.All, a),
+    gapX: a => node.setGap(Gutter.Column, a),
+    gapY: a => node.setGap(Gutter.Row, a),
+
+    aspectRatio: node.setAspectRatio,
+    flex: node.setFlex,
+    flexBasis: node.setFlexBasis,
+    flexGrow: node.setFlexGrow,
+    flexShrink: node.setFlexShrink,
+    boxHeight: node.setHeight,
+    boxWidth: node.setWidth,
+    maxHeight: node.setMaxHeight,
+    maxWidth: node.setMaxWidth,
+    minHeight: node.setMinHeight,
+    minWidth: node.setMinWidth,
   }
 }

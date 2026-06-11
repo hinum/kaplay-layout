@@ -1,0 +1,205 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`nested 1`] = `
+{
+  "children": [
+    {
+      "children": [
+        {
+          "height": 0,
+          "width": 80,
+          "x": 20,
+          "y": 10,
+        },
+        {
+          "height": 50,
+          "width": 50,
+          "x": 20,
+          "y": 10,
+        },
+      ],
+      "height": 70,
+      "width": 120,
+      "x": 10,
+      "y": 10,
+    },
+    {
+      "height": 80,
+      "width": 120,
+      "x": 10,
+      "y": 90,
+    },
+    {
+      "height": 50,
+      "width": 50,
+      "x": 10,
+      "y": 180,
+    },
+  ],
+  "height": 240,
+  "width": 140,
+  "x": 0,
+  "y": 0,
+}
+`;
+
+exports[`pad all edges 1`] = `
+{
+  "children": [
+    {
+      "height": 50,
+      "width": 50,
+      "x": 10,
+      "y": 10,
+    },
+    {
+      "height": 50,
+      "width": 50,
+      "x": 10,
+      "y": 60,
+    },
+  ],
+  "height": 120,
+  "width": 70,
+  "x": 0,
+  "y": 0,
+}
+`;
+
+exports[`pad bottom edge 1`] = `
+{
+  "children": [
+    {
+      "height": 50,
+      "width": 50,
+      "x": 0,
+      "y": 0,
+    },
+    {
+      "height": 50,
+      "width": 50,
+      "x": 0,
+      "y": 50,
+    },
+  ],
+  "height": 110,
+  "width": 50,
+  "x": 0,
+  "y": 0,
+}
+`;
+
+exports[`pad horizontal edges 1`] = `
+{
+  "children": [
+    {
+      "height": 50,
+      "width": 50,
+      "x": 10,
+      "y": 0,
+    },
+    {
+      "height": 50,
+      "width": 50,
+      "x": 10,
+      "y": 50,
+    },
+  ],
+  "height": 100,
+  "width": 70,
+  "x": 0,
+  "y": 0,
+}
+`;
+
+exports[`pad left edge 1`] = `
+{
+  "children": [
+    {
+      "height": 50,
+      "width": 50,
+      "x": 10,
+      "y": 0,
+    },
+    {
+      "height": 50,
+      "width": 50,
+      "x": 10,
+      "y": 50,
+    },
+  ],
+  "height": 100,
+  "width": 60,
+  "x": 0,
+  "y": 0,
+}
+`;
+
+exports[`pad right edge 1`] = `
+{
+  "children": [
+    {
+      "height": 50,
+      "width": 50,
+      "x": 0,
+      "y": 0,
+    },
+    {
+      "height": 50,
+      "width": 50,
+      "x": 0,
+      "y": 50,
+    },
+  ],
+  "height": 100,
+  "width": 60,
+  "x": 0,
+  "y": 0,
+}
+`;
+
+exports[`pad top edge 1`] = `
+{
+  "children": [
+    {
+      "height": 50,
+      "width": 50,
+      "x": 0,
+      "y": 10,
+    },
+    {
+      "height": 50,
+      "width": 50,
+      "x": 0,
+      "y": 60,
+    },
+  ],
+  "height": 110,
+  "width": 50,
+  "x": 0,
+  "y": 0,
+}
+`;
+
+exports[`pad vertical edges 1`] = `
+{
+  "children": [
+    {
+      "height": 50,
+      "width": 50,
+      "x": 0,
+      "y": 10,
+    },
+    {
+      "height": 50,
+      "width": 50,
+      "x": 0,
+      "y": 60,
+    },
+  ],
+  "height": 120,
+  "width": 50,
+  "x": 0,
+  "y": 0,
+}
+`;

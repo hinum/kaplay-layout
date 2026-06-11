@@ -8,12 +8,11 @@ import {
   FlexWrap,
   MeasureFunction,
   MeasureMode,
-  Position,
-} from "./types"
+  StrictFlexboxStyle,
+} from "./types/flexboxStyle"
 
 // TODO: align baseline? overflow
 // component inspect properties
-// flex order?
 
 function fromMeasureMode(mode: number): MeasureMode {
   switch (mode) {
@@ -111,21 +110,8 @@ function toYogaFlexWrap(value: FlexWrap | undefined): number {
       return Yoga.Wrap.NoWrap
   }
 }
-function toYogaPosition(value: Position | undefined): number {
-  switch (value) {
-    case "absolute":
-      return Yoga.PositionType.Absolute
-    case "relative":
-      return Yoga.PositionType.Relative
-    case "static":
-      return Yoga.PositionType.Static
-    case undefined:
-      return Yoga.PositionType.Relative
-  }
-}
-
 export type NodeStyleStter = {
-  [K in keyof FlexboxStyle]: (arg: FlexboxStyle[K]) => void
+  [K in keyof StrictFlexboxStyle]: (arg: FlexboxStyle[K]) => void
 }
 export function createNodeSetter(node: Yoga.Node): NodeStyleStter {
   return {
@@ -137,14 +123,6 @@ export function createNodeSetter(node: Yoga.Node): NodeStyleStter {
     flexDirection: (a) => node.setFlexDirection(toYogaFlexDirection(a)),
     justifyContent: (a) => node.setJustifyContent(toYogaJustify(a)),
 
-    margin: (a) => node.setMargin(Yoga.Edge.All, a),
-    marginX: (a) => node.setMargin(Yoga.Edge.Horizontal, a),
-    marginY: (a) => node.setMargin(Yoga.Edge.Vertical, a),
-    marginLeft: (a) => node.setMargin(Yoga.Edge.Left, a),
-    marginRight: (a) => node.setMargin(Yoga.Edge.Right, a),
-    marginTop: (a) => node.setMargin(Yoga.Edge.Top, a),
-    marginBottom: (a) => node.setMargin(Yoga.Edge.Bottom, a),
-
     padding: (a) => node.setPadding(Yoga.Edge.All, a),
     padX: (a) => node.setPadding(Yoga.Edge.Horizontal, a),
     padY: (a) => node.setPadding(Yoga.Edge.Vertical, a),
@@ -153,7 +131,6 @@ export function createNodeSetter(node: Yoga.Node): NodeStyleStter {
     padTop: (a) => node.setPadding(Yoga.Edge.Top, a),
     padBottom: (a) => node.setPadding(Yoga.Edge.Bottom, a),
 
-    position: (a) => node.setPositionType(toYogaPosition(a)),
     left: (a) => node.setPosition(Yoga.Edge.Left, a),
     right: (a) => node.setPosition(Yoga.Edge.Right, a),
     top: (a) => node.setPosition(Yoga.Edge.Top, a),

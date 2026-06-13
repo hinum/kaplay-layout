@@ -2,7 +2,7 @@ export type Length = number | undefined | `${number}%`
 export type Display = "none" | "flex"
 export type FlexDirection = "column" | "column-reverse" | "row" | "row-reverse"
 export type FlexWrap = "wrap" | "wrap-reverse" | "no-wrap"
-export type Position = "absolute" | "relative" | "static"
+export type Position = "absolute" | "relative"
 
 export type FlexAlign =
   | "auto"
@@ -11,6 +11,7 @@ export type FlexAlign =
   | "start"
   | "space-around"
   | "space-between"
+  | "space-evenly"
   | "stretch"
 export type FlexJustify =
   | "center"
@@ -26,6 +27,7 @@ export type StrictFlexboxStyle = {
   flexGrow: number | undefined
   flexShrink: number | undefined
   alignSelf: FlexAlign | undefined
+  position: Position | undefined
 
   width: Length | "auto" | undefined
   height: Length | "auto" | undefined
@@ -41,30 +43,26 @@ export type StrictFlexboxStyle = {
   /** avoid using this, it doesnt work very well */
   bottom: Length | undefined
 
+  // doesnt work
+  // aspectRatio: number | undefined
+
   alignContent: FlexAlign | undefined
   alignItems: FlexAlign | undefined
-  aspectRatio: number | undefined
   flexDirection: FlexDirection | undefined
   flexWrap: FlexWrap | undefined
   justifyContent: FlexJustify | undefined
 
-  /** set the padding on all sides. */
   padding: Length | undefined
   padLeft: Length | undefined
   padRight: Length | undefined
   padTop: Length | undefined
   padBottom: Length | undefined
-  /** set the padding on the horizontal sides. */
   padX: Length | undefined
-  /** set the padding on the vertical sides. */
   padY: Length | undefined
 
   gap: Length | undefined
-  /** gap between columns. */
   gapX: Length | undefined
-  /** gap between rows. */
   gapY: Length | undefined
-  display: Display | undefined
 }
 
 export type FlexboxStyle = {

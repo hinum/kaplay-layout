@@ -11,7 +11,9 @@ export function createStyleProxy(setters: NodeStyleStter, style: FlexboxStyle) {
     set(target, p, newValue, receiver) {
       const setter = setters[p as keyof FlexboxStyle]
       if (!setter) {
-        throw `non existent style option: ${String(p)} (tried setting to ${newValue})`
+        throw new Error(
+          `non existent style option: ${String(p)} (tried setting to ${newValue})`
+        )
       }
       setter(newValue)
       return Reflect.set(target, p, newValue, receiver)

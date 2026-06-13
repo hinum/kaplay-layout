@@ -109,6 +109,13 @@ export type StaticComp = Comp & {
   layout: StaticFlexboxStyle
   /** update the object position. used internally. */
   updateLayout(): void
+  /** drop the object from the layout tree (if it's in one) */
+  dropLayoutNode(): void
+  /**
+   * insert the object into its parent layout tree.
+   * @throws if the object parent isnt a flexbox.
+   */
+  addLayoutNode(index?: number): void
 }
 export type FlexboxComp = Comp & {
   layout: FlexboxStyle
@@ -116,4 +123,15 @@ export type FlexboxComp = Comp & {
   insertChild(child: Node, index?: number): void
   /** update the object size and position. used internally. */
   updateLayout(): void
+  /**
+   * drop the object from the layout tree
+   * @throws if the object doesnt have a parent node.
+   */
+  dropLayoutNode(): void
+  /**
+   * insert the object into its parent (if it has one) layout tree.
+   * called automatically when the object is added.
+   * @param index index to insert the object into. defaults to appending.
+   */
+  addLayoutNode(index?: number): void
 }

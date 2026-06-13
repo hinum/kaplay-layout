@@ -1,6 +1,5 @@
 import * as Yoga from "yoga-layout/load"
 import {
-  Display,
   FlexAlign,
   FlexboxStyle,
   FlexDirection,
@@ -8,11 +7,11 @@ import {
   FlexWrap,
   MeasureFunction,
   MeasureMode,
+  Position,
   StrictFlexboxStyle,
 } from "./types/flexboxStyle"
 
 // TODO: align baseline? overflow
-// component inspect properties
 
 function fromMeasureMode(mode: number): MeasureMode {
   switch (mode) {
@@ -23,7 +22,7 @@ function fromMeasureMode(mode: number): MeasureMode {
     case Yoga.MeasureMode.Exactly:
       return "stretch"
   }
-  throw `unregonized measure mode from Yoga: ${mode}`
+  throw new Error(`unregonized measure mode from Yoga: ${mode}`)
 }
 export function toYogaMesaureFn(fn: MeasureFunction): Yoga.MeasureFunction {
   return (width, widthMode, height, heightMode) => {
@@ -36,13 +35,13 @@ export function toYogaMesaureFn(fn: MeasureFunction): Yoga.MeasureFunction {
   }
 }
 
-function toYogaDisplay(value: Display | undefined) {
+function toYogaPosition(value: Position | undefined): number {
   switch (value) {
-    case "none":
-      return Yoga.Display.None
-    case "flex":
+    case "absolute":
+      return Yoga.PositionType.Absolute
+    case "relative":
     case undefined:
-      return Yoga.Display.Flex
+      return Yoga.PositionType.Relative
   }
 }
 
@@ -80,8 +79,10 @@ function toYogaAlign(value: FlexAlign | undefined): number {
       return Yoga.Align.SpaceBetween
     case "stretch":
       return Yoga.Align.Stretch
+    case "space-evenly":
+      return Yoga.Align.SpaceEvenly
     case undefined:
-      return Yoga.Align.FlexStart
+      return Yoga.Align.Stretch // oops
   }
 }
 function toYogaFlexDirection(value: FlexDirection | undefined): number {
@@ -118,10 +119,10 @@ export function createNodeSetter(node: Yoga.Node): NodeStyleStter {
     alignContent: (a) => node.setAlignContent(toYogaAlign(a)),
     alignItems: (a) => node.setAlignItems(toYogaAlign(a)),
     alignSelf: (a) => node.setAlignSelf(toYogaAlign(a)),
-    display: (a) => node.setDisplay(toYogaDisplay(a)),
     flexWrap: (a) => node.setFlexWrap(toYogaFlexWrap(a)),
     flexDirection: (a) => node.setFlexDirection(toYogaFlexDirection(a)),
     justifyContent: (a) => node.setJustifyContent(toYogaJustify(a)),
+    position: (a) => node.setPositionType(toYogaPosition(a)),
 
     padding: (a) => node.setPadding(Yoga.Edge.All, a),
     padX: (a) => node.setPadding(Yoga.Edge.Horizontal, a),
@@ -140,7 +141,6 @@ export function createNodeSetter(node: Yoga.Node): NodeStyleStter {
     gapX: (a) => node.setGap(Yoga.Gutter.Column, a),
     gapY: (a) => node.setGap(Yoga.Gutter.Row, a),
 
-    aspectRatio: (a) => node.setAspectRatio(a),
     flex: (a) => node.setFlex(a),
     flexBasis: (a) => node.setFlexBasis(a),
     flexGrow: (a) => node.setFlexGrow(a),

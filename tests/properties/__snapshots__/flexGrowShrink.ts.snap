@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`expand fill 1`] = `
+{
+  "children": [
+    {
+      "height": 50,
+      "width": 50,
+      "x": 10,
+      "y": 10,
+    },
+    {
+      "height": 70,
+      "width": 80,
+      "x": 10,
+      "y": 70,
+    },
+    {
+      "height": 140,
+      "width": 80,
+      "x": 10,
+      "y": 150,
+    },
+  ],
+  "height": 300,
+  "width": 100,
+  "x": 0,
+  "y": 0,
+}
+`;

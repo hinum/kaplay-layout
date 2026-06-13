@@ -64,3 +64,15 @@ test("bottom (column-reverse parent)", async ({
   expect(child.pos.x).toBe(0)
   expect(child.pos.y).toBe(200 - 30 - 50)
 })
+
+test("absolute", async ({ addFlexbox, addStaticBox, once }) => {
+  const parent = addFlexbox({ padding: 10 })
+  addStaticBox(parent)
+  addStaticBox(parent, {
+    position: "absolute",
+    left: "100%",
+    top: "100%",
+  })
+  await once("update")
+  expect(extractTree(parent)).toMatchSnapshot()
+})

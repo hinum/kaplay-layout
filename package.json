@@ -10,7 +10,9 @@
     "build": "vite build",
     "dev": "vite dev",
     "format": "prettier . --write",
-    "test": "vitest --config=vitest.browser.config.ts"
+    "test": "vitest --config=vitest.browser.config.ts",
+    "docs": "typedoc --options ./typedoc.json",
+    "docs:preview": "vite dev ./docs/"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
@@ -20,6 +22,7 @@
     "@vitest/browser-preview": "^4.1.8",
     "express": "^5.2.1",
     "prettier": "3.8.3",
+    "typedoc": "^0.28.19",
     "vite": "^8.0.14",
     "vite-express": "^0.22.1",
     "vite-plugin-dts": "^5.0.1",

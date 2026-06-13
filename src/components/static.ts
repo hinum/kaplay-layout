@@ -55,7 +55,9 @@ export function createStaticComp(
     updateLayout(this: GameObj<PosComp | Size | AnchorComp>) {
       if (!node.hasNewLayout()) return
       node.markLayoutSeen()
-      if (this.pos) setFlexItemPosition(this.parent, this, node)
+      if (this.pos && this.parent) {
+        setFlexItemPosition(this.parent, this, node)
+      }
     },
     get layout() {
       return style
@@ -64,6 +66,15 @@ export function createStaticComp(
       style = createStyleProxy(setter, style)
       node.reset()
       applyStyle(setter, style)
+    },
+    dropLayoutNode() {
+      node.getParent()?.removeChild(node)
+    },
+    addLayoutNode(this: GameObj, index) {
+      if (!this.parent?.insertChild) {
+        throw new Error("the parent object is not a flexbox")
+      }
+      this.parent.insertChild(node, index)
     },
   }
 }

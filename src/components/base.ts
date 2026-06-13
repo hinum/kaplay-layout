@@ -1,6 +1,6 @@
 import { Node } from "yoga-layout"
 import { createNodeSetter, NodeStyleStter } from "../yogaWrapper"
-import { FlexboxStyle, FlexObject } from "@src"
+import { FlexboxStyle, LayoutComp } from "@src"
 import { GameObj } from "kaplay"
 
 export function copy<TFrom, TTo>(from: TFrom, to: TTo) {
@@ -31,7 +31,7 @@ export function createBaseFlexComp(
   node: Node,
   layoutOpts: FlexboxStyle,
   index?: number
-): FlexObject {
+): LayoutComp {
   const setter = createNodeSetter(node)
   let style = createStyleProxy(setter, layoutOpts)
   applyStyle(setter, style)

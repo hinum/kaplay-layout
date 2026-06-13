@@ -128,6 +128,15 @@ check out the documentation at TODO
 I planned to add align baseline and proper text support... soon.
 bear with me a little.
 
+## grids?
+
+[taffy](https://github.com/DioxusLabs/taffy) is a layout engine that supports
+both grids and flexboxes. but it doesn't have an _offical_ WASM bindings right now.
+
+I'm definitely not learning rust just to port it over to JS.
+but when it finally does, I'll migrate over to it.
+I promise that the API won't change too much.
+
 ## contribute
 
 feel free to submit things (do try to format them proper though).

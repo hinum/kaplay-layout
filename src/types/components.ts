@@ -14,9 +14,9 @@ import { Node } from "yoga-layout"
  *
  * components implementing this don't necessary
  * need to be able to contain other flex objects.
- * @see {@link FlexContainer}
+ * @see {@link ContainerComp}
  */
-export interface FlexObject extends Comp {
+export interface LayoutComp extends Comp {
   /** flexbox CSS properties. */
   layout: FlexboxStyle
   /** update the object size and position. used internally. */
@@ -32,7 +32,7 @@ export interface FlexObject extends Comp {
 }
 
 /** base flex container component interface */
-export interface FlexContainer extends FlexObject {
+export interface ContainerComp extends LayoutComp {
   /**
    * insert a child Yoga node.
    * called automatically when a child game object is added.
@@ -43,7 +43,7 @@ export interface FlexContainer extends FlexObject {
   calculateLayout(): void
 }
 
-export interface FlexNodeComp extends FlexContainer {
+export interface FlexNodeComp extends ContainerComp {
   /**
    * fires when the object is moved from a layout calculation.
    *
@@ -124,11 +124,11 @@ export type StaticFlexboxStyle = {
   display?: Display
 }
 
-export interface FlexboxComp extends FlexContainer {
+export interface FlexboxComp extends ContainerComp {
   width: number
   height: number
 }
-export interface StaticComp extends FlexObject {
+export interface StaticComp extends LayoutComp {
   /** flexbox CSS properties. */
   layout: StaticFlexboxStyle
 }

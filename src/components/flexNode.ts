@@ -2,7 +2,7 @@ import { GameObj, KAPLAYCtx } from "kaplay"
 import { toYogaMesaureFn } from "../yogaWrapper"
 import { Edge, Node } from "yoga-layout/load"
 import { FlexboxStyle, MeasureFunction } from "../types/flexboxStyle"
-import { FlexNodeComp, FlexObject } from "../types/components"
+import { FlexNodeComp, LayoutComp } from "../types/components"
 import { copy, createBaseFlexComp } from "./base"
 
 export function createFlexNodeComp(
@@ -41,7 +41,7 @@ export function createFlexNodeComp(
     insertChild(child: Node, index?: number) {
       node.insertChild(child, index ?? node.getChildCount())
     },
-    calculateLayout(this: GameObj<FlexObject>) {
+    calculateLayout(this: GameObj<LayoutComp>) {
       node.calculateLayout(undefined, undefined)
       this.updateLayout()
     },

@@ -10,7 +10,7 @@
     "build": "vite build",
     "dev": "vite dev",
     "format": "prettier . --write",
-    "test": "vitest --config=vitest.browser.config.ts",
+    "test": "vitest",
     "docs": "typedoc --options ./typedoc.json",
     "docs:preview": "vite dev ./docs/ --open"
   },

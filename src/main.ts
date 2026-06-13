@@ -1,39 +1,18 @@
 import { KAPLAYCtx } from "kaplay"
 import { loadYoga } from "yoga-layout/load"
 import { createFlexNodeComp } from "./components/flexNode"
-import { createFlexboxComp } from "./components/flexbox"
 import { createStaticComp } from "./components/static"
 import { FlexboxStyle } from "./main"
 import { StaticFlexboxStyle } from "./main"
 import { FlexNodeComp } from "./main"
-import { FlexboxComp } from "./main"
 import { StaticComp } from "./main"
+import { FlexboxComp } from "./main"
+import { createFlexboxComp } from "./components/flexbox"
 
 export * from "./types/components"
 export * from "./types/flexboxStyle"
-/**
- * @categoryDescription Advanced Use
- * These functions are available for...
- * @showCategories
- * @module
- */
 
-/**
- * @category General Use
- */
-export function runProcess() {}
-
-/**
- * @category Advanced Use
- */
-export function unref() {}
-
-/**
- * @category Advanced Use
- */
-export function ref() {}
-
-export type KaplayLayoutPlugin = {
+export interface KaplayLayoutPlugin {
   /**
    *
    * turns the object into a flexbox. without binding position and size.
@@ -69,7 +48,7 @@ export type KaplayLayoutPlugin = {
    * const parent = k.add([
    *   k.pos(0,0),
    *   k.rect(0,0),
-   *   k.flexbox({ padding: 10 }),
+   *   k.flex({ padding: 10 }),
    * ])
    * parent.add([
    *   k.pos(),
@@ -90,7 +69,7 @@ export type KaplayLayoutPlugin = {
    * const parent = k.add([
    *   k.pos(0,0),
    *   k.rect(0,0),
-   *   k.flexbox({ padding: 10 }),
+   *   k.flex({ padding: 10 }),
    * ])
    * parent.add([
    *   k.pos(),
@@ -108,18 +87,13 @@ export default async function kaplayLayout() {
   return function (k: KAPLAYCtx): KaplayLayoutPlugin {
     return {
       flexNode(style, index) {
-        return createFlexNodeComp(
-          k,
-          Yoga.Node.createDefault(),
-          style ?? {},
-          index
-        )
+        return createFlexNodeComp(k, Yoga.Node.create(), style ?? {}, index)
       },
       flexbox(style, index) {
-        return createFlexboxComp(Yoga.Node.createDefault(), style ?? {}, index)
+        return createFlexboxComp(Yoga.Node.create(), style ?? {}, index)
       },
       static(style, index) {
-        return createStaticComp(Yoga.Node.createDefault(), style ?? {}, index)
+        return createStaticComp(Yoga.Node.create(), style ?? {}, index)
       },
     }
   }

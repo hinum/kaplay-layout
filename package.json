@@ -12,7 +12,7 @@
     "format": "prettier . --write",
     "test": "vitest --config=vitest.browser.config.ts",
     "docs": "typedoc --options ./typedoc.json",
-    "docs:preview": "vite dev ./docs/"
+    "docs:preview": "vite dev ./docs/ --open"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",

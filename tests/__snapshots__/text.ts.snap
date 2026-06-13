@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`use with text 1`] = `
+{
+  "children": [
+    {
+      "height": 36,
+      "width": 329.0625,
+      "x": 20,
+      "y": 20,
+    },
+  ],
+  "height": 76,
+  "width": 369,
+  "x": 0,
+  "y": 0,
+}
+`;
+
+exports[`use with text 2`] = `
+{
+  "children": [
+    {
+      "height": 36,
+      "width": 855.5625,
+      "x": 20,
+      "y": 20,
+    },
+  ],
+  "height": 76,
+  "width": 896,
+  "x": 0,
+  "y": 0,
+}
+`;

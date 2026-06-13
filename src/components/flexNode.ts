@@ -1,9 +1,9 @@
 import { GameObj, KAPLAYCtx } from "kaplay"
-import { createNodeSetter, toYogaMesaureFn } from "../yogaWrapper"
+import { toYogaMesaureFn } from "../yogaWrapper"
 import { Edge, Node } from "yoga-layout/load"
-import { applyStyle, createStyleProxy } from "../utils"
-import { FlexboxStyle } from "../types/flexboxStyle"
-import { FlexNodeComp } from "../types/components"
+import { FlexboxStyle, MeasureFunction } from "../types/flexboxStyle"
+import { FlexNodeComp, FlexObject } from "../types/components"
+import { copy, createBaseFlexComp } from "./base"
 
 export function createFlexNodeComp(
   k: KAPLAYCtx,
@@ -11,48 +11,24 @@ export function createFlexNodeComp(
   layoutOpts: FlexboxStyle,
   index?: number
 ): FlexNodeComp {
-  const setters = createNodeSetter(node)
-  let style = createStyleProxy(setters, layoutOpts)
-  applyStyle(setters, style)
-
-  return {
+  const base = createBaseFlexComp(node, layoutOpts, index)
+  return copy(base, {
     id: "flex-node",
 
-    destroy() {
-      node.free()
-    },
-    add(this: GameObj<FlexNodeComp>) {
-      this.parent?.insertChild?.(node, index)
-    },
     update(this: GameObj<FlexNodeComp>) {
       if (node.getParent()) return
       if (!node.isDirty()) return
       node.calculateLayout(undefined, undefined)
       this.updateLayout()
     },
-    get layout() {
-      return style
-    },
-    set layout(style: FlexboxStyle) {
-      style = createStyleProxy(setters, style)
-      node.reset()
-      applyStyle(setters, style)
-    },
-
     onLayoutShift(this: GameObj, handler: () => void) {
       return this.on("layoutShift", handler)
     },
     markDirty() {
       node.markDirty()
     },
-    setMeasureFn(fn) {
+    setMeasureFn(fn: MeasureFunction) {
       node.setMeasureFunc(toYogaMesaureFn(fn))
-    },
-    insertChild(child, index) {
-      node.insertChild(child, index ?? node.getChildCount())
-    },
-    drop() {
-      node.getParent()?.removeChild(node)
     },
     updateLayout(this: GameObj) {
       if (!node.hasNewLayout()) return
@@ -61,6 +37,13 @@ export function createFlexNodeComp(
       for (const child of this.children) {
         child.updateLayout?.()
       }
+    },
+    insertChild(child: Node, index?: number) {
+      node.insertChild(child, index ?? node.getChildCount())
+    },
+    calculateLayout(this: GameObj<FlexObject>) {
+      node.calculateLayout(undefined, undefined)
+      this.updateLayout()
     },
 
     getComputedLayout() {
@@ -91,5 +74,5 @@ export function createFlexNodeComp(
         bottom: node.getComputedPadding(Edge.Bottom),
       }
     },
-  }
+  })
 }

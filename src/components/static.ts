@@ -1,23 +1,21 @@
 import { AnchorComp, GameObj, PosComp } from "kaplay"
 import { StaticComp, StaticFlexboxStyle } from "../types/components"
-import { FlexboxStyle, Size } from "../types/flexboxStyle"
-import { applyStyle, copy, createStyleProxy } from "../utils"
+import { Size } from "../types/flexboxStyle"
 import { Node } from "yoga-layout"
-import { createNodeSetter } from "../yogaWrapper"
 import { setFlexItemPosition } from "../transform"
+import { copy, createBaseFlexComp } from "./base"
 
 export function createStaticComp(
   node: Node,
   opts: StaticFlexboxStyle,
   index?: number
 ): StaticComp {
-  const setter = createNodeSetter(node)
-  let style = createStyleProxy(setter, opts)
-  applyStyle(setter, opts)
+  const base = createBaseFlexComp(node, opts, index)
+  return copy(base, {
+    id: "static",
+    require: ["pos"],
 
-  return {
-    id: "staticbox",
-
+    update() {},
     destroy() {
       node.free()
     },
@@ -28,26 +26,26 @@ export function createStaticComp(
         height: this.height,
       }))
 
-      const widthDescriptor = Object.getOwnPropertyDescriptor(this, "width")!
-      const heightDescriptor = Object.getOwnPropertyDescriptor(this, "height")!
-      let width: number | undefined = widthDescriptor?.value
-      let height: number | undefined = heightDescriptor?.value
+      const widthDescriptor = Object.getOwnPropertyDescriptor(this, "width")
+      const heightDescriptor = Object.getOwnPropertyDescriptor(this, "height")
+      let width: number = widthDescriptor?.value ?? 0
+      let height: number = heightDescriptor?.value ?? 0
 
       copy(this, {
         get width() {
-          return widthDescriptor.get?.() ?? width
+          return widthDescriptor?.get?.() ?? width
         },
         set width(value) {
           node.markDirty()
-          if (widthDescriptor.set) widthDescriptor.set(value)
+          if (widthDescriptor?.set) widthDescriptor?.set(value)
           else width = value
         },
         get height() {
-          return heightDescriptor.get?.() ?? height
+          return heightDescriptor?.get?.() ?? height
         },
         set height(value) {
           node.markDirty()
-          if (heightDescriptor.set) heightDescriptor.set(value)
+          if (heightDescriptor?.set) heightDescriptor?.set(value)
           else height = value
         },
       })
@@ -59,22 +57,5 @@ export function createStaticComp(
         setFlexItemPosition(this.parent, this, node)
       }
     },
-    get layout() {
-      return style
-    },
-    set layout(style: FlexboxStyle) {
-      style = createStyleProxy(setter, style)
-      node.reset()
-      applyStyle(setter, style)
-    },
-    dropLayoutNode() {
-      node.getParent()?.removeChild(node)
-    },
-    addLayoutNode(this: GameObj, index) {
-      if (!this.parent?.insertChild) {
-        throw new Error("the parent object is not a flexbox")
-      }
-      this.parent.insertChild(node, index)
-    },
-  }
+  })
 }

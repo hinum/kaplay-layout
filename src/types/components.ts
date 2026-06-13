@@ -9,12 +9,41 @@ import {
 } from "./flexboxStyle"
 import { Node } from "yoga-layout"
 
-export type FlexNodeComp = Comp & {
+/**
+ * base flex object component interface.
+ *
+ * components implementing this don't necessary
+ * need to be able to contain other flex objects.
+ * @see {@link FlexContainer}
+ */
+export interface FlexObject extends Comp {
   /** flexbox CSS properties. */
   layout: FlexboxStyle
-
-  /** trigger a layout shift. used internally. */
+  /** update the object size and position. used internally. */
   updateLayout(): void
+  /** drop the object from the layout tree (if it's in one) */
+  dropLayoutNode(): void
+  /**
+   * insert the object into its parent layout tree (if it has one).
+   * called automatically when the object is added.
+   * @param index index to insert the object into. defaults to appending.
+   */
+  addLayoutNode(index?: number): void
+}
+
+/** base flex container component interface */
+export interface FlexContainer extends FlexObject {
+  /**
+   * insert a child Yoga node.
+   * called automatically when a child game object is added.
+   * @param index index to insert the object into. defaults to appending.
+   */
+  insertChild(child: Node, index?: number): void
+  /** force a layout calculation and updates all children. parents will not be effacted */
+  calculateLayout(): void
+}
+
+export interface FlexNodeComp extends FlexContainer {
   /**
    * fires when the object is moved from a layout calculation.
    *
@@ -23,15 +52,7 @@ export type FlexNodeComp = Comp & {
    * use {@link getComputedLayout} or similar functions instead.
    */
   onLayoutShift(handler: () => void): KEventController
-  /** @private */
-  insertChild(child: Node, index?: number): void
-  /**
-   * remove this object from the layout tree. this doesnt destroy the object.
-   */
-  drop(): void
-  /**
-   * tell yoga to re calculate the object size using its measure function.
-   */
+  /** tell yoga to re calculate the object size using its measure function. */
   markDirty(): void
   /**
    * set the measure function.
@@ -41,9 +62,7 @@ export type FlexNodeComp = Comp & {
    */
   setMeasureFn(measureFn: MeasureFunction): void
 
-  /**
-   * @returns position relative to top left of the containing box
-   */
+  /** @returns position relative to top left of the containing box */
   getComputedOffset(): Vec2
   getComputedSize(): {
     readonly width: number
@@ -105,33 +124,11 @@ export type StaticFlexboxStyle = {
   display?: Display
 }
 
-export type StaticComp = Comp & {
-  layout: StaticFlexboxStyle
-  /** update the object position. used internally. */
-  updateLayout(): void
-  /** drop the object from the layout tree (if it's in one) */
-  dropLayoutNode(): void
-  /**
-   * insert the object into its parent layout tree.
-   * @throws if the object parent isnt a flexbox.
-   */
-  addLayoutNode(index?: number): void
+export interface FlexboxComp extends FlexContainer {
+  width: number
+  height: number
 }
-export type FlexboxComp = Comp & {
-  layout: FlexboxStyle
-  /** @private */
-  insertChild(child: Node, index?: number): void
-  /** update the object size and position. used internally. */
-  updateLayout(): void
-  /**
-   * drop the object from the layout tree
-   * @throws if the object doesnt have a parent node.
-   */
-  dropLayoutNode(): void
-  /**
-   * insert the object into its parent (if it has one) layout tree.
-   * called automatically when the object is added.
-   * @param index index to insert the object into. defaults to appending.
-   */
-  addLayoutNode(index?: number): void
+export interface StaticComp extends FlexObject {
+  /** flexbox CSS properties. */
+  layout: StaticFlexboxStyle
 }

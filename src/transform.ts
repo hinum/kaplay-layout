@@ -1,4 +1,4 @@
-import { Anchor, AnchorComp, GameObj, PosComp, ScaleComp, Vec2 } from "kaplay"
+import { Anchor, AnchorComp, GameObj, PosComp, Vec2 } from "kaplay"
 import { Node } from "yoga-layout"
 import { Size } from "./main"
 
@@ -57,7 +57,7 @@ function offsetAnchor(
 
 export function setFlexItemPosition(
   parent: PossibleParent | null,
-  object: GameObj<{ pos: Vec2 } | Size | Partial<AnchorComp | ScaleComp>>,
+  object: GameObj<{ pos: Vec2 } | Size | Partial<AnchorComp>>,
   node: Node
 ) {
   object.pos.x = node.getComputedLeft()

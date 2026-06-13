@@ -11,7 +11,7 @@ install the NPM library.
 npm install kaplay-layout
 ```
 
-and then add initialize the plugin.
+and then initialize the plugin.
 
 ```typescript
 import kaplay from "kaplay"
@@ -55,12 +55,12 @@ k.onClick(() => {
 ```
 
 do note that layout calculations happens during updates.
-that means you can't normally read flexboxes size directly after they are added.
+that means you can't read object sizes instantly after they are added to the scene.
 this is to prevent unnecessary calculations.
 though you can force a calculation imediately using `calculateLayout`.
 
 since kaplay-layout only uses position under the hood.
-scale, rotation, shaders, anchors etc. should just works!
+scale, rotation, shaders, anchors etc. (should) just works!
 
 ```typescript
 const parent = k.add([
@@ -84,7 +84,7 @@ nested.add([
 (hint: you should always use `pos` to avoid edge cases
 even if `flexbox` works without them)
 
-percent lentghs and every flexbox properties works.
+percent lentghs and every flexbox properties also works.
 
 ```typescript
 const parent = k.add([

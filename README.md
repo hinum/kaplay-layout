@@ -1,4 +1,6 @@
-implements a flexbox (and possibly grids?) system in kaplay
+# kaplay-layout
+
+implements a flexboxs (and possibly grids?) in kaplay
 using the [Yoga layout engine](https://github.com/react/yoga).
 
 ## installation
@@ -44,8 +46,8 @@ parent.add([k.pos(), k.rect(20, 20), k.static()])
 // it will be placed next to the previous child
 const box = parent.add([k.pos(), k.rect(20, 20), k.static()])
 
-// ...then you can just change the static object size!
-// the flexbox will grow accordingly.
+// then you can just change the static object size!
+// and the flexbox will grow accordingly.
 k.onClick(() => {
   box.width += 4
   box.width += 4
@@ -54,27 +56,35 @@ k.onClick(() => {
 
 do note that layout calculations happens during updates.
 that means you can't normally read flexboxes size directly after they are added.
-this is to prevent unnecessary calculations,
+this is to prevent unnecessary calculations.
 though you can force a calculation imediately using `calculateLayout`.
 
 since kaplay-layout only uses position under the hood.
 scale, rotation, shaders, anchors etc. should just works!
 
 ```typescript
-const parent = k.add([k.pos(), k.flexbox(), k.scale(1.1)])
+const parent = k.add([
+  k.pos(),
+  k.flexbox(),
+  k.scale(1.1)
+])
 const nested = parent.add([
   k.flexbox(),
   k.pos(),
   k.rotate(45),
   k.anchor("center"),
 ])
-nested.add([k.pos(), k.static(), k.text("it just works!")])
+nested.add([
+  k.pos(),
+  k.static(),
+  k.text("it just works!")
+])
 ```
 
 (hint: you should always use `pos` to avoid edge cases
 even if `flexbox` works without them)
 
-percent lentghs and ever flexbox properties works.
+percent lentghs and every flexbox properties works.
 
 ```typescript
 const parent = k.add([

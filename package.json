@@ -1,5 +1,5 @@
 {
-  "name": "kaplay-flexbox",
+  "name": "kaplay-layout",
   "version": "1.0.0",
   "description": "a wrapper around Yoga that provides real CSS flexbox in kaplay.",
   "license": "MIT",
@@ -7,6 +7,16 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "keywords": [
+    "kaplay",
+    "kaplayjs",
+    "layout",
+    "flexbox"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hinum/kaplay-layout.git"
+  },
   "scripts": {
     "build": "vite build",
     "dev": "vite dev",
@@ -34,7 +44,7 @@
     "vitest": "^4.1.8"
   },
   "peerDependencies": {
-    "kaplay": "^3001.0.19"
+    "kaplay": ">=3000.0.0"
   },
   "dependencies": {
     "yoga-layout": "^3.2.1"

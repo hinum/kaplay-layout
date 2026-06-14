@@ -16,8 +16,8 @@ export interface KaplayLayoutPlugin {
   /**
    *
    * turns the object into a flexbox. without binding position and size.
-   *
    * useful for implementing custom transition and custom size measuring.
+   *
    * @param style CSS properties.
    * @param index index in which to insert the object into. defaults to appending the object.
    * @example
@@ -38,9 +38,9 @@ export interface KaplayLayoutPlugin {
   flexNode(style?: FlexboxStyle, index?: number): FlexNodeComp
   /**
    * turns the object into a flexbox.
-   *
    * the object size (and position if it is a child to another flexbox)
    * will be automatically changed to match the layout.
+   *
    * @param style CSS properties.
    * @param index index in which to insert the object into. defaults to appending the object.
    * @example
@@ -59,9 +59,9 @@ export interface KaplayLayoutPlugin {
    */
   flexbox(style?: FlexboxStyle, index?: number): FlexboxComp
   /**
-   * turns the object into a static flex children.
+   * turns the object into a static children.
+   * its size is not managed by kaplay-layout so it wont grow or shrink.
    *
-   * its size wont be updated but its position will be updated according to the layout.
    * @param style CSS properties.
    * @param index index in which to insert the object into. defaults to appending the object.
    * @example

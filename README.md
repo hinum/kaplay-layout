@@ -1,6 +1,6 @@
 # kaplay-layout
 
-implements a flexboxs (and possibly grids?) in kaplay
+implements flexboxs (and possibly grids?) in [kaplay](https://kaplayjs.com/)
 using the [Yoga layout engine](https://github.com/react/yoga).
 
 ## installation
@@ -105,7 +105,7 @@ parent.add([
 
 ## documentation
 
-check out the documentation at TODO
+check out (the documentation)[https://hinum.github.io/kaplay-layout/interfaces/KaplayLayoutPlugin.html].
 
 ## textbox?
 

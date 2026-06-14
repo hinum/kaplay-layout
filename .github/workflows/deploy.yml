@@ -8,13 +8,13 @@ on:
   release:
     types: [created]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   deploy-docs:
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,17 +32,16 @@ jobs:
         uses: actions/deploy-pages@v4
 
   publish-npm:
-    permissions:
-      id-token: write
-
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 26
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
       - run: npm ci
       - name: build package
         run: npm run build
       - name: publish package
-        run: npm publish --provenance
+        run: npm publish

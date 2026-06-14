@@ -1,4 +1,9 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["./src/main.ts"]
+  "entryPoints": ["./src/main.ts"],
+  "favicon": "./assets/favicon.png",
+  "headings": {
+    "readme": false,
+    "document": false
+  }
 }

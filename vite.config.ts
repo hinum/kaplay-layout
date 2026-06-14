@@ -36,11 +36,7 @@ export default defineConfig({
       provider: process.env.CI === "true" ? playwright() : preview(),
       instances:
         process.env.CI === "true"
-          ? [
-              { browser: "chromium" },
-              { browser: "webkit" },
-              // { browser: "firefox" }, cringe firefox not supporting webgl
-            ]
+          ? [{ browser: "chromium" }, { browser: "webkit" }]
           : [{ browser: "chromium" }],
       viewport: {
         width: 1280,

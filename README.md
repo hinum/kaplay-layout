@@ -105,7 +105,7 @@ parent.add([
 
 ## documentation
 
-check out (the documentation)[https://hinum.github.io/kaplay-layout/interfaces/KaplayLayoutPlugin.html].
+check out [the documentation](https://hinum.github.io/kaplay-layout/interfaces/KaplayLayoutPlugin.html).
 
 ## textbox?
 

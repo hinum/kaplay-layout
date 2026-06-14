@@ -1,4 +1,5 @@
 import { preview } from "@vitest/browser-preview"
+import { playwright } from "@vitest/browser-playwright"
 import { defineConfig } from "vitest/config"
 import { resolve } from "node:path"
 import dts from "vite-plugin-dts"
@@ -9,7 +10,7 @@ export default defineConfig({
       entry: resolve(__dirname, "src/main.ts"),
       name: "KaplayLayout",
       fileName: "index",
-      formats: ["es", "cjs"],
+      formats: ["es"],
     },
     rollupOptions: {
       external: ["kaplay", /yoga-layout/],
@@ -30,8 +31,17 @@ export default defineConfig({
     exclude: ["./tests/lib"],
     browser: {
       enabled: true,
-      provider: preview(),
-      instances: [{ browser: "chrome" }],
+      // i use both because playwright doesnt support archlinux.
+      // i use arch btw.
+      provider: process.env.CI === "true" ? playwright() : preview(),
+      instances:
+        process.env.CI === "true"
+          ? [
+              { browser: "chromium" },
+              { browser: "webkit" },
+              // { browser: "firefox" }, cringe firefox not supporting webgl
+            ]
+          : [{ browser: "chromium" }],
       viewport: {
         width: 1280,
         height: 720,

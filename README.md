@@ -63,22 +63,14 @@ since kaplay-layout only uses position under the hood.
 scale, rotation, shaders, anchors etc. should just works.
 
 ```typescript
-const parent = k.add([
-  k.pos(),
-  k.flexbox(),
-  k.scale(1.1)
-])
+const parent = k.add([k.pos(), k.flexbox(), k.scale(1.1)])
 const nested = parent.add([
   k.flexbox(),
   k.pos(),
   k.rotate(45),
   k.anchor("center"),
 ])
-nested.add([
-  k.pos(),
-  k.static(),
-  k.text("it just works!")
-])
+nested.add([k.pos(), k.static(), k.text("it just works!")])
 ```
 
 (hint: you should always use `pos` to avoid edge cases

@@ -80,26 +80,26 @@ percent lentghs and every flexbox properties also works.
 
 ```typescript
 const parent = k.add([
-    k.pos(),
-    k.rect(0, 0),
-    k.outline(1),
-    k.flexbox({
-        minWidth: 100,
-        padding: 10,
-        minHeight: 100,
-        flexDirection: "row",
-        justifyContent: "start",
-        alignItem: "strech",
-    })
+  k.pos(),
+  k.rect(0, 0),
+  k.outline(1),
+  k.flexbox({
+    minWidth: 100,
+    padding: 10,
+    minHeight: 100,
+    flexDirection: "row",
+    justifyContent: "start",
+    alignItem: "strech",
+  }),
 ])
 parent.add([
-    k.pos(),
-    k.rect(0, 0),
-    k.outline(1),
-    k.flexbox({
-        maxHeight: "20%",
-        flex: 1,
-    })
+  k.pos(),
+  k.rect(0, 0),
+  k.outline(1),
+  k.flexbox({
+    maxHeight: "20%",
+    flex: 1,
+  }),
 ])
 ```
 

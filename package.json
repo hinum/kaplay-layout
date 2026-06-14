@@ -1,6 +1,6 @@
 {
   "name": "kaplay-flexbox",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "a wrapper around Yoga that provides real CSS flexbox in kaplay.",
   "license": "MIT",
   "author": "numblr",

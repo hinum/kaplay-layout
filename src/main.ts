@@ -90,10 +90,10 @@ export default async function kaplayLayout() {
         return createFlexNodeComp(k, Yoga.Node.create(), style ?? {}, index)
       },
       flexbox(style, index) {
-        return createFlexboxComp(Yoga.Node.create(), style ?? {}, index)
+        return createFlexboxComp(k, Yoga.Node.create(), style ?? {}, index)
       },
       static(style, index) {
-        return createStaticComp(Yoga.Node.create(), style ?? {}, index)
+        return createStaticComp(k, Yoga.Node.create(), style ?? {}, index)
       },
     }
   }

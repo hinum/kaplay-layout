@@ -1,4 +1,4 @@
-import { Anchor, AnchorComp, GameObj, PosComp, Vec2 } from "kaplay"
+import { Anchor, AnchorComp, GameObj, KAPLAYCtx, PosComp, Vec2 } from "kaplay"
 import { Node } from "yoga-layout"
 import { Size } from "./main"
 
@@ -6,14 +6,14 @@ type CompleteParent = GameObj<PosComp | AnchorComp | Size>
 type PossibleParent = Partial<CompleteParent>
 
 function offsetAnchor(
-  object: GameObj<{ pos: Vec2 }>,
+  pos: Vec2,
   width?: number,
   height?: number,
   anchor?: Anchor | Vec2
 ) {
   if (typeof anchor == "object") {
-    object.pos.x -= anchor.x
-    object.pos.y -= anchor.y
+    pos.x -= anchor.x
+    pos.y -= anchor.y
   }
   if (
     width !== undefined &&
@@ -24,44 +24,45 @@ function offsetAnchor(
       case "topleft":
         return
       case "top":
-        object.pos.x -= width / 2
+        pos.x -= width / 2
         return
       case "topright":
-        object.pos.x -= width
+        pos.x -= width
         return
       case "left":
-        object.pos.y -= height / 2
+        pos.y -= height / 2
         return
       case "center":
-        object.pos.x -= width / 2
-        object.pos.y -= height / 2
+        pos.x -= width / 2
+        pos.y -= height / 2
         return
       case "right":
-        object.pos.x -= width
-        object.pos.y -= height / 2
+        pos.x -= width
+        pos.y -= height / 2
         return
       case "botleft":
-        object.pos.y -= height
+        pos.y -= height
         return
       case "bot":
-        object.pos.x -= width / 2
-        object.pos.y -= height
+        pos.x -= width / 2
+        pos.y -= height
         return
       case "botright":
-        object.pos.x -= width
-        object.pos.y -= height
+        pos.x -= width
+        pos.y -= height
         return
     }
   }
 }
 
 export function setFlexItemPosition(
+  k: KAPLAYCtx,
   parent: PossibleParent | null,
   object: GameObj<{ pos: Vec2 } | Size | Partial<AnchorComp>>,
   node: Node
 ) {
-  object.pos.x = node.getComputedLeft()
-  object.pos.y = node.getComputedTop()
-  offsetAnchor(object, parent?.width, parent?.height, parent?.anchor)
-  offsetAnchor(object, -object.width, -object.height, object.anchor)
+  const pos = k.vec2(node.getComputedLeft(), node.getComputedTop())
+  offsetAnchor(pos, parent?.width, parent?.height, parent?.anchor)
+  offsetAnchor(pos, -object.width, -object.height, object.anchor)
+  object.pos = pos
 }

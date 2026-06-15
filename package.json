@@ -1,12 +1,22 @@
 {
   "name": "kaplay-layout",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a wrapper around Yoga that provides real CSS flexbox in kaplay.",
   "license": "MIT",
   "author": "numblr",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "keywords": [
     "kaplay",
     "kaplayjs",
@@ -19,7 +29,6 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "vite dev",
     "format": "prettier . --write",
     "lint": "prettier . --check",
     "test": "vitest",
@@ -44,7 +53,7 @@
     "vitest": "^4.1.8"
   },
   "peerDependencies": {
-    "kaplay": ">=3000.0.0"
+    "kaplay": "x.x.x-0"
   },
   "dependencies": {
     "yoga-layout": "^3.2.1"

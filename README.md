@@ -6,9 +6,10 @@ using the [Yoga layout engine](https://github.com/react/yoga).
 ## installation
 
 install the NPM library.
+(added `--force` if you're using alpha versions )
 
 ```sh
-npm install kaplay-layout
+npm install --force kaplay-layout
 ```
 
 and then initialize the plugin.

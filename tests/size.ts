@@ -1,4 +1,6 @@
 import { extractTree, test } from "@fixtures"
+import { Size } from "@src"
+import { GameObj, PosComp } from "kaplay"
 import { expect } from "vitest"
 
 test("flexbox without size", async ({ k, addStaticBox, once }) => {
@@ -39,4 +41,22 @@ test("static without size", async ({ k, addStaticBox, once }) => {
   expect(box.pos.y).toBe(50)
   expect(parent.height).toBe(50)
   expect(parent.width).toBe(50)
+})
+
+test("static change size", async ({ addStaticBox, k, once }) => {
+  const parent = k.add([k.pos(k.center()), k.anchor("center"), k.flexbox()])
+  const boxes: GameObj<PosComp | Size>[] = []
+  for (let i = 0; i < 5; i++) {
+    boxes.push(addStaticBox(parent))
+  }
+  await once("update")
+  const pos = boxes.map((a) => ({ ...a.pos }))
+  expect(pos).toMatchObject(boxes.map((a) => a.pos))
+
+  boxes.forEach((a) => {
+    a.width += 10
+    a.height += 10
+  })
+  await once("update")
+  expect(pos).not.toMatchObject(boxes.map((a) => a.pos))
 })

@@ -1,4 +1,4 @@
-import { AnchorComp, GameObj, PosComp } from "kaplay"
+import { AnchorComp, GameObj, KAPLAYCtx, PosComp } from "kaplay"
 import { StaticComp, StaticFlexboxStyle } from "../types/components"
 import { Size } from "../types/flexboxStyle"
 import { Node } from "yoga-layout"
@@ -6,6 +6,7 @@ import { setFlexItemPosition } from "../transform"
 import { copy, createBaseFlexComp } from "./base"
 
 export function createStaticComp(
+  k: KAPLAYCtx,
   node: Node,
   opts: StaticFlexboxStyle,
   index?: number
@@ -54,7 +55,7 @@ export function createStaticComp(
       if (!node.hasNewLayout()) return
       node.markLayoutSeen()
       if (this.pos && this.parent) {
-        setFlexItemPosition(this.parent, this, node)
+        setFlexItemPosition(k, this.parent, this, node)
       }
     },
   })

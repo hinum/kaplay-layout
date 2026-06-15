@@ -1,4 +1,11 @@
-import { AnchorComp, GameObj, PosComp, RotateComp, ScaleComp } from "kaplay"
+import {
+  AnchorComp,
+  GameObj,
+  KAPLAYCtx,
+  PosComp,
+  RotateComp,
+  ScaleComp,
+} from "kaplay"
 import { FlexboxStyle, Size } from "../types/flexboxStyle"
 import { FlexboxComp } from "../types/components"
 import { Node } from "yoga-layout"
@@ -9,6 +16,7 @@ type TransformComp = AnchorComp | ScaleComp | RotateComp | Size
 type PossibleFlexbox = GameObj<Partial<TransformComp> | FlexboxComp | PosComp>
 
 export function createFlexboxComp(
+  k: KAPLAYCtx,
   node: Node,
   opts: FlexboxStyle,
   index?: number
@@ -23,7 +31,7 @@ export function createFlexboxComp(
       this.width = node.getComputedWidth()
       this.height = node.getComputedHeight()
       if (this.pos && node.getParent()) {
-        setFlexItemPosition(this.parent, this, node)
+        setFlexItemPosition(k, this.parent, this, node)
       }
       for (const child of this.children) {
         child.updateLayout?.()
